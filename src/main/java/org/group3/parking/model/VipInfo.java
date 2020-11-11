@@ -1,8 +1,15 @@
 package org.group3.parking.model;
 
-import org.hibernate.annotations.ForeignKey;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.math.BigDecimal;
 
+@Entity
 public class VipInfo {
-
+    @Id
+    long vipId;
     String plateNumber;
+    String phoneNumber;
+    BigDecimal balance;
+
 }
