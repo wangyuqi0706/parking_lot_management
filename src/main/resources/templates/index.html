@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<title>Signin Template for Bootstrap</title>
+		<title>登录</title>
 		<!-- Bootstrap core CSS -->
 		<link th:href="@{/asserts/css/bootstrap.min.css}" rel="stylesheet">
 		<!-- Custom styles for this template -->
@@ -13,10 +13,10 @@
 	</head>
 
 	<body class="text-center">
-		<form class="form-signin" th:action="@{/user/login}">
+		<form class="form-signin" th:action="@{/admin/login}" method="post">
 			<img class="mb-4" th:src="@{/asserts/img/bootstrap-solid.svg}" alt="" width="72" height="72">
 			<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}"></h1>
-<!--			<p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>-->
+			<div class="alert alert-danger" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></div>
 			<input type="text" class="form-control" name="username" th:placeholder="#{login.username}" required="" autofocus="">
 			<input type="password" class="form-control" name="password" th:placeholder="#{login.password}" required="">
 			<div class="checkbox mb-3">

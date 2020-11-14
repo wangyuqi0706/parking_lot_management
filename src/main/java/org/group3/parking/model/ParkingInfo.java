@@ -1,7 +1,8 @@
 package org.group3.parking.model;
 
 
-import org.springframework.data.annotation.CreatedDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,12 +17,16 @@ public class ParkingInfo {
     @GeneratedValue
     private Long parkingId;
 
-    @Column(nullable = false,length = 7)
+    @Column(nullable = false, length = 7)
     private String plateNumber;
 
-    @CreatedDate
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm", timezone = "GMT+8")
     private LocalDateTime enterTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm", timezone = "GMT+8")
     private LocalDateTime leaveTime;
 
     private BigDecimal amountPayable;
