@@ -49,23 +49,23 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <h2>修改VIP信息</h2>
 
-            <form th:action="@{/admin/vip/add}" method="post">
+            <form th:action="@{/admin/vip/edit/{plateNumber}(plateNumber=${vipInfo.getPlateNumber()})}" method="post">
                 <div class="form-group">
                     <label for="plateNumberInput">车牌号</label>
                     <input type="text" class="form-control" id="plateNumberInput" th:name="plateNumber"
-                           placeholder="车牌号">
+                           placeholder="车牌号" th:value="${vipInfo.getPlateNumber()}">
                 </div>
 
                 <div class="form-group">
                     <label for="amountPayableInput">账户余额</label>
                     <input type="text" class="form-control" id="amountPayableInput" th:name="balance"
-                           placeholder="账户余额">
+                           placeholder="账户余额" th:value="${vipInfo.getBalance()}">
                 </div>
 
                 <div class="form-group">
                     <label for="amountPayableInput">联系电话</label>
                     <input type="text" class="form-control" id="phoneNumberInput" th:name="phoneNumber"
-                           placeholder="联系电话">
+                           placeholder="联系电话" th:value="${vipInfo.getPhoneNumber()}">
                 </div>
 
                 <button type="submit" class="btn btn-primary">修改</button>

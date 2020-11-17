@@ -4,7 +4,6 @@ import org.group3.parking.model.ParkingInfo;
 import org.group3.parking.model.VipInfo;
 import org.group3.parking.service.ParkingInfoService;
 import org.group3.parking.service.VipInfoService;
-import org.hibernate.annotations.GeneratorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -120,5 +118,28 @@ public class AdminController {
         return "redirect:/admin/vip/info";
     }
 
+    @GetMapping("vip/edit/{plateNumber}")
+    public String toVipEditPage(@PathVariable("plateNumber") String plateNumber,Model msg){
+        try {
+            VipInfo vipInfo = this.vipInfoService.getVipInfoByPlateNumber(plateNumber);
+            msg.addAttribute("vipInfo",vipInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "404";
+        }
+        return "/admin/vip_info/edit";
+    }
+
+    @PostMapping("vip/edit/{plateNumber}")
+    public String editVipInfo(@PathVariable("plateNumber") String plateNumber,VipInfo vipInfo) {
+        try {
+            this.vipInfoService.updateVipInfoByPlateNumber(plateNumber,vipInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "404";
+        }
+        return "redirect:/admin/vip/info";
+
+    }
 }
 

@@ -12,7 +12,7 @@ public class ParkingApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ParkingApplication.class, args);
-        System.out.println("http://localhost:8080");
+        System.out.println("http://localhost:8080/admin/main");
     }
 
 }
