@@ -28,8 +28,11 @@ public class VipInfoServiceImpl implements VipInfoService {
 
     @Override
     public void updateVipInfoByPlateNumber(String plateNumber, VipInfo vipInfo) throws Exception {
-        vipInfo.setPlateNumber(plateNumber);
-        this.vipInfoRepository.saveAndFlush(vipInfo);
+        //如果修改了主键，需要删除旧的信息
+        if (!plateNumber.equals(vipInfo.getPlateNumber())) {
+            this.vipInfoRepository.deleteById(plateNumber);
+        }
+        this.vipInfoRepository.save(vipInfo);
     }
 
     @Override
