@@ -6,10 +6,13 @@ import org.group3.parking.service.VipInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VipInfoServiceImpl implements VipInfoService {
+
     @Autowired
     VipInfoRepository vipInfoRepository;
 
@@ -32,5 +35,16 @@ public class VipInfoServiceImpl implements VipInfoService {
     @Override
     public void createVipInfo(VipInfo vipInfo) throws Exception {
         this.vipInfoRepository.saveAndFlush(vipInfo);
+    }
+
+    @Override
+    public boolean isVip(String plateNumber) {
+        Optional<VipInfo> vipInfo = this.vipInfoRepository.findById(plateNumber);
+        return vipInfo.isPresent();
+    }
+
+    @Override
+    public void chargeBalance(String plateNumber, BigDecimal amount) throws Exception {
+
     }
 }
