@@ -16,9 +16,10 @@ public interface ParkingInfoService {
 
     ParkingInfo getParkingInfoById(Long id) throws Exception;
 
-    void enterParkingLot(ParkingInfo parkingInfo) throws Exception;
+    void enterParkingLot(String plateNumber) throws Exception;
 
-    void leaveParkingLot(ParkingInfo parkingInfo) throws Exception;
+    void leaveParkingLot(String plateNumber) throws Exception;
 
     void payForLeave(String plateNumber, BigDecimal amount) throws Exception;
+
 }

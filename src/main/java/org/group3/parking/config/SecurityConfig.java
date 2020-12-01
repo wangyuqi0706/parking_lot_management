@@ -18,7 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureForwardUrl("/admin/login/error")
                 .successForwardUrl("/admin/main")
                 .defaultSuccessUrl("/admin/main").permitAll()
-                .and().authorizeRequests().antMatchers("/**","/asserts/**").permitAll()
+                .and().authorizeRequests().antMatchers("/admin/index", "/asserts/**").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable();
     }
