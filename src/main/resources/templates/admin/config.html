@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>修改停车信息</title>
+    <title>停车场设置</title>
     <!-- Bootstrap core CSS -->
     <link th:href="@{/asserts/css/bootstrap.min.css}" rel="stylesheet">
 
@@ -47,39 +47,32 @@
     <div class="row">
         <div th:replace="~{common/commons::sidebar}"></div>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>修改停车信息</h2>
-
-            <form th:action="@{/admin/parking/edit/{id}(id=${parking_info.getParkingId()})}" method="post">
+            <h2>修改停车场信息</h2>
+            <form th:action="@{/admin/config}" method="post">
                 <div class="form-group">
-                    <label for="idInput">停车信息ID</label>
-                    <input type="text" class="form-control " readonly id="idInput" th:name="parking_id" th:value="${parking_id}">
+                    <label for="sizeInput">规模</label>
+                    <input type="number" step="1" min="0" class="form-control" id="sizeInput" name="size"
+                           placeholder="规模" th:value="${currentConfig.getSize()}">
+                </div>
+
+                <div class="form-group">
+                    <label for="unitPriceInput">每小时单价</label>
+                    <input type="number" step="0.01" min="0" class="form-control" id="unitPriceInput" name="unitPrice"
+                           placeholder="每小时单价" th:value="${currentConfig.getUnitPrice()}">
+                </div>
+
+                <div class="form-group">
+                    <label for="discountInput">VIP折扣</label>
+                    <input type="number" step="0.01" min="0" max="1" class="form-control" id="discountInput"
+                           name="discount"
+                           placeholder="VIP折扣" th:value="${currentConfig.getDiscount()}">
                 </div>
                 <div class="form-group">
-                    <label for="plateNumberInput">车牌号</label>
-                    <input type="text" class="form-control" id="plateNumberInput" th:name="plateNumber"
-                           placeholder="车牌号" th:value="${parking_info.getPlateNumber()}">
+                    <button type="submit" class="btn btn-primary">修改</button>
+                    <div class="alert alert-success" role="alert" th:if="${success}">修改成功</div>
                 </div>
-                <div class="form-row">
-                    <div class="col">
-                        <label for="enterTimeInput">进入时间</label>
-                        <input type="datetime-local" class="form-control" id="enterTimeInput" th:name="enterTime"
-                               placeholder="进入时间" th:value="${parking_info.getEnterTime()}">
-                    </div>
-
-                    <div class="col">
-                        <label for="leaveTimeInput">离开时间</label>
-                        <input type="datetime-local" class="form-control" id="leaveTimeInput" th:name="leaveTime"
-                               placeholder="离开时间" th:value="${parking_info.getLeaveTime()}">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <label for="amountPayableInput">应缴金额</label>
-                    <input type="number" step="0.01" class="form-control" id="amountPayableInput" th:name="amountPayable"
-                           placeholder="应缴金额" th:value="${parking_info.getAmountPayable()}">
-                </div>
-
-                <button type="submit" class="btn btn-primary">修改信息</button>
             </form>
+
         </main>
     </div>
 </div>

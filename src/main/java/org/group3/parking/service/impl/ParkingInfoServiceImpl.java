@@ -1,8 +1,9 @@
 package org.group3.parking.service.impl;
 
-import org.group3.parking.config.ParkingLotConfig;
 import org.group3.parking.model.ParkingInfo;
+import org.group3.parking.model.ParkingLotConfig;
 import org.group3.parking.repository.ParkingInfoRepository;
+import org.group3.parking.service.ConfigService;
 import org.group3.parking.service.ParkingInfoService;
 import org.group3.parking.service.VipInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
     @Autowired
     VipInfoService vipInfoService;
     @Autowired
-    ParkingLotConfig parkingLotConfig;
+    ConfigService configService;
 
     @Override
     public List<ParkingInfo> getAllParkingInfo() {
@@ -81,6 +82,17 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
         //检查金额是否正确
     }
 
+    /**
+     * 一段时间的收入
+     * @param startTime 起始时间
+     * @param endTime   终止时间
+     * @return 这段时间的收入
+     */
+    @Override
+    public BigDecimal getIncomeSumBetweenTwoTime(LocalDateTime startTime, LocalDateTime endTime) {
+        return parkingInfoRepository.getTotalIncomingBetween(startTime, endTime);
+    }
+
     private boolean hasEntered(String plateNumber) {
         Optional<ParkingInfo> parkingInfo = parkingInfoRepository.findByPlateNumberAndLeaveTimeIsNull(plateNumber);
         return parkingInfo.isPresent();
@@ -96,10 +108,14 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
         long minutes = duration.toMinutesPart();
         if (minutes >= 30)
             hours++;
+
+        ParkingLotConfig parkingLotConfig = configService.getParkingLotConfig();
         amount = parkingLotConfig.getUnitPrice().multiply(BigDecimal.valueOf(hours));
         if (vipInfoService.isVip(parkingInfo.getPlateNumber())) {
             amount = amount.multiply(parkingLotConfig.getDiscount());
         }
         return amount;
     }
+
+
 }

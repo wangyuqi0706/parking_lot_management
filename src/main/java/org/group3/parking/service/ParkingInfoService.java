@@ -3,6 +3,7 @@ package org.group3.parking.service;
 import org.group3.parking.model.ParkingInfo;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ParkingInfoService {
@@ -22,4 +23,5 @@ public interface ParkingInfoService {
 
     void payForLeave(String plateNumber, BigDecimal amount) throws Exception;
 
+    BigDecimal getIncomeSumBetweenTwoTime(LocalDateTime startTime, LocalDateTime endTime);
 }

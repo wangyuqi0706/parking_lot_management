@@ -13,7 +13,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String password = passwordEncoder.encode("123456");
+        String password = passwordEncoder.encode("666666");
         auth.inMemoryAuthentication().withUser("admin").password(password).roles("admin");
     }
 
@@ -28,10 +28,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/admin/index")
                 .loginProcessingUrl("/admin/login")
                 .failureForwardUrl("/admin/login/error")
-                .successForwardUrl("/admin/main")
-                .defaultSuccessUrl("/admin/main").permitAll()
-                .and().authorizeRequests().antMatchers("/admin/index", "/asserts/**").permitAll()
+                .successForwardUrl("/admin/main").permitAll().and()
+                .authorizeRequests().antMatchers("/admin/index", "/asserts/**").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable();
+//        http.authorizeRequests().antMatchers("/**").permitAll();
     }
 }

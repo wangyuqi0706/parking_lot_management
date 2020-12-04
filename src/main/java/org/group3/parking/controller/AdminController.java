@@ -1,17 +1,17 @@
 package org.group3.parking.controller;
 
 import org.group3.parking.model.ParkingInfo;
+import org.group3.parking.model.ParkingLotConfig;
 import org.group3.parking.model.VipInfo;
+import org.group3.parking.service.ConfigService;
 import org.group3.parking.service.ParkingInfoService;
 import org.group3.parking.service.VipInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -21,6 +21,9 @@ public class AdminController {
     ParkingInfoService parkingInfoService;
     @Autowired
     VipInfoService vipInfoService;
+    @Autowired
+    ConfigService configService;
+
 
     @RequestMapping("/index")
     public String toLoginPage() {
@@ -61,10 +64,10 @@ public class AdminController {
         return "redirect:/admin/parking/info";
     }
 
-    @GetMapping("parking/edit/{parking_id}")
-    public String toEditParkingInfo(@PathVariable("parking_id") Long parking_id, Model msg) {
+    @GetMapping("parking/edit/{parkingId}")
+    public String toEditParkingInfo(@PathVariable("parkingId") Long parkingId, Model msg) {
         try {
-            ParkingInfo parkingInfo = this.parkingInfoService.getParkingInfoById(parking_id);
+            ParkingInfo parkingInfo = this.parkingInfoService.getParkingInfoById(parkingId);
             msg.addAttribute("parking_info", parkingInfo);
         } catch (Exception e) {
             return "404";
@@ -72,10 +75,10 @@ public class AdminController {
         return "admin/parking_info/edit";
     }
 
-    @PostMapping("parking/edit/{parking_id}")
-    public String editParingInfo(@PathVariable Long parking_id, ParkingInfo parkingInfo) {
+    @PostMapping("parking/edit/{parkingId}")
+    public String editParingInfo(@PathVariable Long parkingId, ParkingInfo parkingInfo) {
         try {
-            this.parkingInfoService.updateParkingInfo(parking_id, parkingInfo);
+            this.parkingInfoService.updateParkingInfo(parkingId, parkingInfo);
         } catch (Exception e) {
             e.printStackTrace();
             return "404";
@@ -83,10 +86,10 @@ public class AdminController {
         return "redirect:/admin/parking/info";
     }
 
-    @GetMapping("parking/delete/{parking_id}")
-    public String deleteParkingInfo(@PathVariable Long parking_id) {
+    @GetMapping("parking/delete/{parkingId}")
+    public String deleteParkingInfo(@PathVariable Long parkingId) {
         try {
-            this.parkingInfoService.deleteParkingInfo(parking_id);
+            this.parkingInfoService.deleteParkingInfo(parkingId);
         } catch (Exception e) {
             e.printStackTrace();
             return "404";
@@ -103,12 +106,12 @@ public class AdminController {
     }
 
     @GetMapping("vip/add")
-    public String toVipAddPage(){
+    public String toVipAddPage() {
         return "/admin/vip_info/add";
     }
 
     @PostMapping("vip/add")
-    public String addVipInfo(VipInfo vipInfo){
+    public String addVipInfo(VipInfo vipInfo) {
         try {
             this.vipInfoService.createVipInfo(vipInfo);
         } catch (Exception e) {
@@ -119,10 +122,10 @@ public class AdminController {
     }
 
     @GetMapping("vip/edit/{plateNumber}")
-    public String toVipEditPage(@PathVariable("plateNumber") String plateNumber,Model msg){
+    public String toVipEditPage(@PathVariable("plateNumber") String plateNumber, Model msg) {
         try {
             VipInfo vipInfo = this.vipInfoService.getVipInfoByPlateNumber(plateNumber);
-            msg.addAttribute("vipInfo",vipInfo);
+            msg.addAttribute("vipInfo", vipInfo);
         } catch (Exception e) {
             e.printStackTrace();
             return "404";
@@ -131,15 +134,43 @@ public class AdminController {
     }
 
     @PostMapping("vip/edit/{plateNumber}")
-    public String editVipInfo(@PathVariable("plateNumber") String plateNumber,VipInfo vipInfo) {
+    public String editVipInfo(@PathVariable("plateNumber") String plateNumber, VipInfo vipInfo) {
         try {
-            this.vipInfoService.updateVipInfoByPlateNumber(plateNumber,vipInfo);
+            this.vipInfoService.updateVipInfoByPlateNumber(plateNumber, vipInfo);
         } catch (Exception e) {
             e.printStackTrace();
             return "404";
         }
-        return "redirect:/admin/vip/info";
 
+        return "redirect:/admin/vip/info";
     }
+
+    @GetMapping("/config")
+    public String toConfigPage(Model msg) {
+
+        ParkingLotConfig parkingLotConfig = configService.getParkingLotConfig();
+        msg.addAttribute("currentConfig", parkingLotConfig);
+        return "/admin/config";
+    }
+
+    @PostMapping("/config")
+    public String updateConfig(ParkingLotConfig parkingLotConfig, Model msg) {
+        try {
+            configService.updateConfig(parkingLotConfig);
+            msg.addAttribute("success", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/admin/config/success";
+    }
+
+    @GetMapping("/config/success")
+    public String toConfigSuccessPage(Model msg){
+        ParkingLotConfig parkingLotConfig = configService.getParkingLotConfig();
+        msg.addAttribute("currentConfig", parkingLotConfig);
+        msg.addAttribute("success",true);
+        return "/admin/config";
+    }
+
 }
 
