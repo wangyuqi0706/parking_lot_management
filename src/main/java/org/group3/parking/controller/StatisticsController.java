@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,25 +22,38 @@ public class StatisticsController {
     @Autowired
     private ParkingInfoService parkingInfoService;
 
-    @GetMapping("/incoming")
+    @GetMapping("/income")
     public String toIncomingStatistics() {
-        return "income";
+        return "/admin/statistics/income";
     }
 
-    @PostMapping("/incoming")
-    public String showIncomeStatisticsByDay(@RequestParam LocalDate startDay,
-                                            @RequestParam LocalDate endDay,
-                                            Model msg) {
-        List<BigDecimal> result = new ArrayList<>();
-        for (var i = startDay; !i.isAfter(endDay); i = i.plusDays(1)) {
-            LocalDateTime startDateTime = LocalDateTime.of(startDay, LocalTime.MIN);
-            LocalDateTime endDateTime = LocalDateTime.of(endDay,LocalTime.MAX);
-            BigDecimal incomingOfADay = parkingInfoService.getIncomeSumBetweenTwoTime(startDateTime, endDateTime);
-            result.add(incomingOfADay);
+    @PostMapping("/income")
+    public String showIncomeStatistics(@RequestParam("startTime") String startTimeString,
+                                       @RequestParam("endTime") String endTimeString,
+                                       @RequestParam("type") String type,
+                                       Model msg) {
+        List<BigDecimal> result;
+        List<String> xSeries = new ArrayList<>();
+        if (type.equals("month")) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+            var startYearMonth = YearMonth.parse(startTimeString, formatter);
+            var endYearMonth = YearMonth.parse(endTimeString, formatter);
+            result = parkingInfoService.getIncomeByMonth(startYearMonth, endYearMonth);
+            for (var i = startYearMonth; !i.isAfter(endYearMonth); i = i.plusMonths(1)) {
+                xSeries.add(i.format(formatter));
+            }
+
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            var startDate = LocalDate.parse(startTimeString, formatter);
+            var endDate = LocalDate.parse(endTimeString, formatter);
+            result = parkingInfoService.getIncomeByDay(startDate, endDate);
+            for (var i = startDate; !i.isAfter(endDate); i = i.plusDays(1)) {
+                xSeries.add(i.format(formatter));
+            }
         }
-        msg.addAttribute("income",result);
-        msg.addAttribute("startDay",startDay);
-        msg.addAttribute("endDay",endDay);
+        msg.addAttribute("incomeList", result);
+        msg.addAttribute("xSeries", xSeries);
         return "/admin/statistics/income";
     }
 }

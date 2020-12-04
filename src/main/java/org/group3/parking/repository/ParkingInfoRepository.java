@@ -16,7 +16,7 @@ public interface ParkingInfoRepository extends JpaRepository <ParkingInfo, Long>
 
     List<ParkingInfo> findByLeaveTimeBetween(LocalDateTime startTime, LocalDateTime endTime);
 
-    @Query(nativeQuery = true,value = "select sum() from parking_info where leave_time >= :startTime and leave_time<= :endTime")
+    @Query(nativeQuery = true,value = "select sum(amount_payable) from parking_info where leave_time >= ?1 and leave_time<= ?2")
     BigDecimal getTotalIncomingBetween(LocalDateTime startTime,LocalDateTime endTime);
 
 }
