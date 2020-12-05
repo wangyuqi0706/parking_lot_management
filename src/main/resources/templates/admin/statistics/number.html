@@ -24,7 +24,7 @@
         <div th:replace="~{common/commons::sidebar}"></div>
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="form-group">
-                <form th:action="@{/statistics/income}" method="post">
+                <form th:action="@{/statistics/number}" method="post">
                     <div class="form-row">
                         <div class="form-inline col-**" id="radios">
                             <div class="form-inline">
@@ -57,37 +57,6 @@
                 </form>
             </div>
             <div id="chart" style="width: 1600px;height:800px;"></div>
-            <script type="text/javascript" th:inline="javascript">
-                // 基于准备好的dom，初始化echarts实例
-                var myChart = echarts.init(document.getElementById('chart'));
-
-                /*<![CDATA[*/
-                var income = /*[[${incomeList}]]*/ [];
-                var xData = /*[[${xSeries}]]*/ [];
-                /*]]>*/
-                // 指定图表的配置项和数据
-                var option = {
-                    title: {
-                        text: '收益统计'
-                    },
-                    tooltip: {},
-                    legend: {
-                        data: ['收益']
-                    },
-                    xAxis: {
-                        data: xData
-                    },
-                    yAxis: {},
-                    series: [{
-                        name: '收益',
-                        type: 'line',
-                        data: income
-                    }]
-                };
-
-                // 使用刚指定的配置项和数据显示图表。
-                myChart.setOption(option);
-            </script>
 
         </main>
     </div>
@@ -121,6 +90,37 @@
 </script>
 
 <!-- Graphs -->
+<script type="text/javascript" th:inline="javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('chart'));
+
+    /*<![CDATA[*/
+    var income = /*[[${numberList}]]*/ [];
+    var xData = /*[[${xSeries}]]*/ [];
+    /*]]>*/
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '停车量统计'
+        },
+        tooltip: {},
+        legend: {
+            data: ['停车量']
+        },
+        xAxis: {
+            data: xData
+        },
+        yAxis: {},
+        series: [{
+            name: '停车量',
+            type: 'line',
+            data: income
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
 
 </body>
 

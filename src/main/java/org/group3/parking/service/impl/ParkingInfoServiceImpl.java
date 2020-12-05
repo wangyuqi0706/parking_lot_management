@@ -48,7 +48,12 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
 
     @Override
     public ParkingInfo getParkingInfoById(Long id) throws Exception {
-        return this.parkingInfoRepository.findById(id).get();
+
+        Optional<ParkingInfo> parkingInfo = this.parkingInfoRepository.findById(id);
+        if (parkingInfo.isPresent())
+            return parkingInfo.get();
+        else
+            throw new Exception("Can not find this parking_info by the id:" + id);
     }
 
 
@@ -83,20 +88,9 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
         //检查金额是否正确
     }
 
-    /**
-     * 一段时间的收入
-     *
-     * @param startTime 起始时间
-     * @param endTime   终止时间
-     * @return 这段时间的收入
-     */
-    @Override
-    public BigDecimal getIncomeSumBetweenTwoTime(LocalDateTime startTime, LocalDateTime endTime) {
-        return parkingInfoRepository.getTotalIncomingBetween(startTime, endTime);
-    }
 
     /**
-     * 根据月统计收入
+     * 按月统计收入
      *
      * @param startYearMonth 初始月份
      * @param endYearMonth   终止月份
@@ -117,6 +111,8 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
     }
 
     /**
+     * 按日统计收入（根据当日离开）
+     *
      * @param startDate 初始日期
      * @param endDate   终止日期
      * @return 从初始日期到终止日期，每一天的收入
@@ -131,6 +127,48 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
             endDateTime = i.atTime(LocalTime.MAX);
             BigDecimal dayIncome = parkingInfoRepository.getTotalIncomingBetween(startDateTime, endDateTime);
             result.add(Objects.requireNonNullElse(dayIncome, BigDecimal.ZERO));
+        }
+        return result;
+    }
+
+    /**
+     * 按月统计停车量（根据进入时间）
+     *
+     * @param startYearMonth 初始月份
+     * @param endYearMonth   终止日期
+     * @return 从初始月到终止月，每个月的停车量
+     */
+    @Override
+    public List<Integer> getParkingNumberByMonth(YearMonth startYearMonth, YearMonth endYearMonth) {
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+        List<Integer> result = new ArrayList<>();
+        for (var i = startYearMonth; !i.isAfter(endYearMonth); i = i.plusMonths(1)) {
+            startDateTime = i.atDay(1).atTime(LocalTime.MIN);
+            endDateTime = i.atEndOfMonth().atTime(LocalTime.MAX);
+            Integer monthParkingNumber = parkingInfoRepository.getTotalNumberBetween(startDateTime, endDateTime);
+            result.add(Objects.requireNonNullElse(monthParkingNumber, 0));
+        }
+        return result;
+    }
+
+    /**
+     * 按日统计停车量
+     *
+     * @param startDate 起始日期
+     * @param endDate   终止日期
+     * @return 从起始日期到终止日期期间，每一天的收入
+     */
+    @Override
+    public List<Integer> getParkingNumberByDay(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+        List<Integer> result = new ArrayList<>();
+        for (var i = startDate; !i.isAfter(endDate); i = i.plusDays(1)) {
+            startDateTime = i.atTime(LocalTime.MIN);
+            endDateTime = i.atTime(LocalTime.MAX);
+            Integer dayParkingNumber = parkingInfoRepository.getTotalNumberBetween(startDateTime, endDateTime);
+            result.add(Objects.requireNonNullElse(dayParkingNumber, 0));
         }
         return result;
     }
