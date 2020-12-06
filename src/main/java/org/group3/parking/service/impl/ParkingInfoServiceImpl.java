@@ -1,7 +1,6 @@
 package org.group3.parking.service.impl;
 
 import org.group3.parking.model.ParkingInfo;
-import org.group3.parking.model.ParkingLotConfig;
 import org.group3.parking.repository.ParkingInfoRepository;
 import org.group3.parking.service.ConfigService;
 import org.group3.parking.service.ParkingInfoService;
@@ -58,29 +57,29 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
 
 
     @Override
-    public void enterParkingLot(String plateNumber) throws Exception {
+    public void enterParkingLot(String plateNumber, LocalDateTime enterTime) throws Exception {
         //检查是否符合进入的信息条件,再插入数据项
         if (hasEntered(plateNumber))
             throw new Exception("This car has entered!");
         ParkingInfo parkingInfo = new ParkingInfo();
         parkingInfo.setPlateNumber(plateNumber);
-        parkingInfo.setEnterTime(LocalDateTime.now());
+        parkingInfo.setEnterTime(enterTime);
         parkingInfoRepository.save(parkingInfo);
     }
 
     @Override
-    public void leaveParkingLot(String plateNumber) throws Exception {
+    public ParkingInfo leaveParkingLot(String plateNumber, LocalDateTime leaveTime) throws Exception {
         //检查是否符合离开的信息条件，计算应缴金额，再更新数据库
         if (!hasEntered(plateNumber))
             throw new Exception("This car has not entered!");
         Optional<ParkingInfo> parkingInfo = parkingInfoRepository.findByPlateNumberAndLeaveTimeIsNull(plateNumber);
-        if (parkingInfo.isPresent()) {
-            parkingInfo.get().setLeaveTime(LocalDateTime.now());
+        if (parkingInfo.isPresent() && leaveTime.isAfter(parkingInfo.get().getEnterTime())) {
+            parkingInfo.get().setLeaveTime(leaveTime);
             BigDecimal amount = calculateAmount(parkingInfo.get());
             parkingInfo.get().setAmountPayable(amount);
-            // TODO: 2020/12/1 还需要返回应缴金额
-        }
-
+            return parkingInfo.get();
+        } else
+            throw new Exception();
     }
 
     @Override
@@ -180,19 +179,40 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
 
     private BigDecimal calculateAmount(ParkingInfo parkingInfo) {
         //计算金额
+        //进入、离开时间
         LocalDateTime enterTime = parkingInfo.getEnterTime();
         LocalDateTime leaveTime = parkingInfo.getLeaveTime();
-        BigDecimal amount;
+        //获取基础价格
+        BigDecimal amount = configService.getParkingLotConfig().getBasePrice();
+        //获取日间、夜间价格
+        BigDecimal dayTimePrice = configService.getParkingLotConfig().getDayTimeUnitPrice();
+        BigDecimal nightTimePrice = configService.getParkingLotConfig().getNightTimeUnitPrice();
+        //获取时间间隔
         Duration duration = Duration.between(enterTime, leaveTime);
-        long hours = duration.toHours();
-        long minutes = duration.toMinutesPart();
-        if (minutes >= 30)
-            hours++;
+        //计算天数
+        BigDecimal days = BigDecimal.valueOf(duration.toDays());
+        //计算不满一天的小时数
+        BigDecimal hours = BigDecimal.valueOf(duration.toHoursPart());
+        //计算不满一小时的分钟数
+        BigDecimal minutes = BigDecimal.valueOf(duration.toMinutesPart());
+        //分钟数超过半小时，按照满一小时计算
+        if (minutes.compareTo(BigDecimal.valueOf(30)) >= 0)
+            hours = hours.add(BigDecimal.ONE);
 
-        ParkingLotConfig parkingLotConfig = configService.getParkingLotConfig();
-        amount = parkingLotConfig.getUnitPrice().multiply(BigDecimal.valueOf(hours));
+        //计算整天部分的金额
+        amount = amount.add(days.multiply(dayTimePrice.add(nightTimePrice)));
+
+        //计算不足一天部分的金额
+        for (var i = enterTime.getHour(); i <= enterTime.getHour() + duration.toHoursPart(); i++) {
+            if ((i >= 9 && i <= 21) || (i >= 9 + 24 && i <= 21 + 24)) {
+                amount = amount.add(dayTimePrice);
+            } else {
+                amount = amount.add(nightTimePrice);
+            }
+        }
+
         if (vipInfoService.isVip(parkingInfo.getPlateNumber())) {
-            amount = amount.multiply(parkingLotConfig.getDiscount());
+            amount = amount.multiply(configService.getParkingLotConfig().getDiscount());
         }
         return amount;
     }

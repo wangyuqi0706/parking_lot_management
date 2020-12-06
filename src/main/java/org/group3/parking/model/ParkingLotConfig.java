@@ -1,7 +1,6 @@
 package org.group3.parking.model;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,7 +14,9 @@ public class ParkingLotConfig {
 
     int size;
 
-    BigDecimal unitPrice;
+    BigDecimal dayTimeUnitPrice;
+    BigDecimal nightTimeUnitPrice;
+    BigDecimal basePrice;
 
     BigDecimal discount;
 

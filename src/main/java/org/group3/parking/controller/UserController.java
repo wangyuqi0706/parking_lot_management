@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/user")
@@ -16,10 +17,11 @@ public class UserController {
     ParkingInfoService parkingInfoService;
 
     @PostMapping("/enter")
-    public String enter(@RequestParam String plateNumber) {
+    public String enter(@RequestParam("plateNumber") String plateNumber,
+                        @RequestParam("enterTime") LocalDateTime enterTime) {
 
         try {
-            parkingInfoService.enterParkingLot(plateNumber);
+            parkingInfoService.enterParkingLot(plateNumber, enterTime);
         } catch (Exception e) {
             e.printStackTrace();
             return "error";
@@ -28,10 +30,11 @@ public class UserController {
     }
 
     @PostMapping("/leave")
-    public String leave(@RequestParam String plateNumber) {
+    public String leave(@RequestParam("plateNumber") String plateNumber,
+                        @RequestParam("leaveTime") LocalDateTime leaveTime) {
 
         try {
-            parkingInfoService.leaveParkingLot(plateNumber);
+            parkingInfoService.leaveParkingLot(plateNumber, leaveTime);
         } catch (Exception e) {
             e.printStackTrace();
         }

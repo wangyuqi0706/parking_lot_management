@@ -4,6 +4,7 @@ import org.group3.parking.model.ParkingInfo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -18,9 +19,9 @@ public interface ParkingInfoService {
 
     ParkingInfo getParkingInfoById(Long id) throws Exception;
 
-    void enterParkingLot(String plateNumber) throws Exception;
+    void enterParkingLot(String plateNumber, LocalDateTime enterTime) throws Exception;
 
-    void leaveParkingLot(String plateNumber) throws Exception;
+    ParkingInfo leaveParkingLot(String plateNumber,LocalDateTime enterTime) throws Exception;
 
     void payForLeave(String plateNumber, BigDecimal amount) throws Exception;
 
