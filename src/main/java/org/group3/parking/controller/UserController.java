@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("user")
 public class UserController {
     @Autowired
     ParkingInfoService parkingInfoService;
@@ -21,7 +21,7 @@ public class UserController {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
 
-    @PostMapping("/enter")
+    @PostMapping("enter")
     public ResponseEntity<String> enter(@RequestParam("plateNumber") String plateNumber,
                                 @RequestParam("enterTime") String enterTime) {
 
@@ -38,7 +38,7 @@ public class UserController {
         return new ResponseEntity<String>("ok", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/leave",method = RequestMethod.POST)
+    @RequestMapping(value = "leave",method = RequestMethod.POST)
     public ParkingInfo leave(@RequestParam("plateNumber") String plateNumber,
                         @RequestParam("leaveTime") String leaveTime) {
 
@@ -51,19 +51,4 @@ public class UserController {
         }
     }
 
-    @GetMapping("/pay/{parkingId}")
-    public String toPayPage(@PathVariable("parkingId") Long parkingId ){
-        return "/user/";
-    }
-
-    @PostMapping("/pay")
-    public String pay(String plateNumber, BigDecimal amount) {
-        try {
-            this.parkingInfoService.payForLeave(plateNumber, amount);
-        } catch (Exception e) {
-            String message = e.getMessage();
-            System.out.println(message);
-        }
-        return null;
-    }
 }

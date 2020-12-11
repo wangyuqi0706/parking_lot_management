@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @Controller
-@RequestMapping("/pay")
+@RequestMapping("pay")
 public class PayController {
     @Autowired
     VipInfoService vipInfoService;
     @Autowired
     ParkingInfoService parkingInfoService;
 
-    @GetMapping("/leave/{parkingId}")
+    @GetMapping("leave/{parkingId}")
     public String toPayPage(@PathVariable("parkingId") Long parkingId, Model msg) throws Exception {
         ParkingInfo parkingInfo = parkingInfoService.getParkingInfoById(parkingId);
         if (vipInfoService.isVip(parkingInfo.getPlateNumber())) {
@@ -31,27 +31,27 @@ public class PayController {
                 balance = balance.subtract(parkingInfo.getAmountPayable());
                 vipInfo.setBalance(balance);
                 msg.addAttribute("vipInfo", vipInfo);
-                return "/pay/success";
+                return "pay/success";
             } else {
                 //余额不足
                 msg.addAttribute("vipInsufficientBalance", true);
                 msg.addAttribute("vipInfo", vipInfo);
-                return "/pay/vipBalanceCharge";
+                return "pay/vipBalanceCharge";
             }
         } else {
             //用户不是VIP
             msg.addAttribute("parkingInfo", parkingInfo);
-            return "/pay/payForLeave";
+            return "pay/payForLeave";
         }
     }
 
-    @GetMapping("/vipBalanceCharge")
+    @GetMapping("vipBalanceCharge")
     public String toVipBalanceCharge(Model msg) {
         msg.addAttribute("vipInsufficientBalance", false);
-        return "/pay/vipBalanceCharge";
+        return "pay/vipBalanceCharge";
     }
 
-    @PostMapping("/vipBalanceCharge")
+    @PostMapping("vipBalanceCharge")
     public String vipBalanceCharge(@RequestParam("plateNumber") String plateNumber
             , @RequestParam("amount") BigDecimal amount
             , @RequestParam("phoneNumber") String phoneNumber) throws Exception {
@@ -66,7 +66,12 @@ public class PayController {
             vipInfo.setPhoneNumber(phoneNumber);
             vipInfoService.insertVipInfo(vipInfo);
         }
-        return "/pay/success";
+        return "pay/success";
+    }
+
+    @RequestMapping("success")
+    public String toSuccessPage() {
+        return "pay/success";
     }
 
 }

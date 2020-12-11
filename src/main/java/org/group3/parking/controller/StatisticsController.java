@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/statistics/")
+@RequestMapping("statistics")
 public class StatisticsController {
     @Autowired
     private ParkingInfoService parkingInfoService;
@@ -25,12 +25,12 @@ public class StatisticsController {
     private final DateTimeFormatter YearMonthFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    @GetMapping("/income")
+    @GetMapping("income")
     public String toIncomingStatistics() {
         return "/admin/statistics/income";
     }
 
-    @PostMapping("/income")
+    @PostMapping("income")
     public String showIncomeStatistics(@RequestParam("startTime") String startTimeString,
                                        @RequestParam("endTime") String endTimeString,
                                        @RequestParam("type") String type,
@@ -51,16 +51,16 @@ public class StatisticsController {
         }
         msg.addAttribute("incomeList", result);
         msg.addAttribute("xSeries", xSeries);
-        return "/admin/statistics/income";
+        return "admin/statistics/income";
     }
 
 
-    @GetMapping("/number")
+    @GetMapping("number")
     public String toNumberStatistics() {
-        return "/admin/statistics/number";
+        return "admin/statistics/number";
     }
 
-    @PostMapping("/number")
+    @PostMapping("number")
     public String showNumberStatistics(@RequestParam("startTime") String startTimeString,
                                        @RequestParam("endTime") String endTimeString,
                                        @RequestParam("type") String type,
@@ -81,7 +81,7 @@ public class StatisticsController {
         }
         msg.addAttribute("numberList", result);
         msg.addAttribute("xSeries", xSeries);
-        return "/admin/statistics/number";
+        return "admin/statistics/number";
     }
 
 

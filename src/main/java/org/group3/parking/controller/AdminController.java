@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/admin")
+@RequestMapping(value = "admin")
 public class AdminController {
     @Autowired
     ParkingInfoService parkingInfoService;
@@ -25,27 +25,27 @@ public class AdminController {
     ConfigService configService;
 
 
-    @RequestMapping("/index")
+    @RequestMapping("index")
     public String toLoginPage() {
         return "index";
     }
 
-    @RequestMapping("/main")
+    @RequestMapping("main")
     public String toMainPage() {
-        return "/admin/main";
+        return "admin/main";
     }
 
-    @RequestMapping("/login/error")
+    @RequestMapping("login/error")
     public String toLoginFailurePage(Model msg) {
         msg.addAttribute("msg", "用户名或密码错误，请重试！");
         return "index";
     }
 
-    @GetMapping("/parking/info")
+    @GetMapping("parking/info")
     public String toParkingInfoPage(Model msg) {
         List<ParkingInfo> parkingInfoList = parkingInfoService.getAllParkingInfo();
         msg.addAttribute("parkingInfoList", parkingInfoList);
-        return "/admin/parking_info/parking_info";
+        return "admin/parking_info/parking_info";
     }
 
     @GetMapping("parking/add")
@@ -102,12 +102,12 @@ public class AdminController {
         List<VipInfo> vipInfoList;
         vipInfoList = this.vipInfoService.getAllVipInfo();
         msg.addAttribute("vipInfoList", vipInfoList);
-        return "/admin/vip_info/vip_info";
+        return "admin/vip_info/vip_info";
     }
 
     @GetMapping("vip/add")
     public String toVipAddPage() {
-        return "/admin/vip_info/add";
+        return "admin/vip_info/add";
     }
 
     @PostMapping("vip/add")
@@ -130,7 +130,7 @@ public class AdminController {
             e.printStackTrace();
             return "404";
         }
-        return "/admin/vip_info/edit";
+        return "admin/vip_info/edit";
     }
 
     @PostMapping("vip/edit/{plateNumber}")
@@ -145,15 +145,15 @@ public class AdminController {
         return "redirect:/admin/vip/info";
     }
 
-    @GetMapping("/config")
+    @GetMapping("config")
     public String toConfigPage(Model msg) {
 
         ParkingLotConfig parkingLotConfig = configService.getParkingLotConfig();
         msg.addAttribute("currentConfig", parkingLotConfig);
-        return "/admin/config";
+        return "admin/config";
     }
 
-    @PostMapping("/config")
+    @PostMapping("config")
     public String updateConfig(ParkingLotConfig parkingLotConfig, Model msg) {
         try {
             configService.updateConfig(parkingLotConfig);
@@ -164,12 +164,12 @@ public class AdminController {
         return "redirect:/admin/config/success";
     }
 
-    @GetMapping("/config/success")
+    @GetMapping("config/success")
     public String toConfigSuccessPage(Model msg){
         ParkingLotConfig parkingLotConfig = configService.getParkingLotConfig();
         msg.addAttribute("currentConfig", parkingLotConfig);
         msg.addAttribute("success",true);
-        return "/admin/config";
+        return "admin/config";
     }
 
 }
