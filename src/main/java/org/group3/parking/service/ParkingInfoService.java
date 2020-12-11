@@ -33,5 +33,9 @@ public interface ParkingInfoService {
 
     List<Integer> getParkingNumberByDay(LocalDate startDate, LocalDate endDate);
 
-
+    class HasEnteredException extends Exception{
+        public HasEnteredException(String message){
+            super(message);
+        }
+    }
 }

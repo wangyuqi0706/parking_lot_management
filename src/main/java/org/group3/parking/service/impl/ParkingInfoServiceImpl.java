@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,10 +59,10 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
 
 
     @Override
-    public void enterParkingLot(String plateNumber, LocalDateTime enterTime) throws Exception {
+    public void enterParkingLot(String plateNumber, LocalDateTime enterTime) throws HasEnteredException {
         //检查是否符合进入的信息条件,再插入数据项
         if (hasEntered(plateNumber))
-            throw new Exception("This car has entered!");
+            throw new HasEnteredException("Car" + plateNumber + "has entered!");
         ParkingInfo parkingInfo = new ParkingInfo();
         parkingInfo.setPlateNumber(plateNumber);
         parkingInfo.setEnterTime(enterTime);
@@ -70,16 +72,17 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
     @Override
     public ParkingInfo leaveParkingLot(String plateNumber, LocalDateTime leaveTime) throws Exception {
         //检查是否符合离开的信息条件，计算应缴金额，再更新数据库
-        if (!hasEntered(plateNumber))
-            throw new Exception("This car has not entered!");
         Optional<ParkingInfo> parkingInfo = parkingInfoRepository.findByPlateNumberAndLeaveTimeIsNull(plateNumber);
-        if (parkingInfo.isPresent() && leaveTime.isAfter(parkingInfo.get().getEnterTime())) {
+        if (parkingInfo.isEmpty())
+            throw new Exception("This car " + plateNumber + " has not entered!");
+        if (leaveTime.isAfter(parkingInfo.get().getEnterTime())) {
             parkingInfo.get().setLeaveTime(leaveTime);
             BigDecimal amount = calculateAmount(parkingInfo.get());
             parkingInfo.get().setAmountPayable(amount);
+            parkingInfoRepository.save(parkingInfo.get());
             return parkingInfo.get();
         } else
-            throw new Exception();
+            throw new Exception("Leave time must be later than enter time!");
     }
 
     @Override
@@ -216,6 +219,5 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
         }
         return amount;
     }
-
 
 }

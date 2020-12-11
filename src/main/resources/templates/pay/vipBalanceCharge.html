@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>VIP充值</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/asserts/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/asserts/css/signin.css}" rel="stylesheet">
+</head>
+
+<body class="text-center">
+<form class="form-signin" th:action="@{/pay/vipBalanceCharge}" method="post">
+    <h1 class="h3 mb-3 font-weight-normal">VIP充值</h1>
+    <div class="alert alert-danger" th:if="${vipInsufficientBalance}">您的余额不足，请充值</div>
+    <div class="form-group">
+        <input type="text" id="plateNumberInput" class="form-control" name="plateNumber" placeholder="车牌号" required
+               autofocus>
+        <br>
+        <input type="tel" id="phoneNumberInput" class="form-control" name="phoneNumber" placeholder="手机号码"
+               required>
+        <br>
+        <input type="number" id="amountInput" step="1" min="1" class="form-control" name="amount" placeholder="金额"
+               required>
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">充值</button>
+    </div>
+
+
+</form>
+
+</body>
+
+</html>

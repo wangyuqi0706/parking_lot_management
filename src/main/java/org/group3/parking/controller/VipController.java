@@ -16,12 +16,12 @@ public class VipController {
     VipInfoService vipInfoService;
 
     @GetMapping("/charge")
-    public String toChargePage(){
+    public String toChargePage() {
         return null;
     }
 
     @PostMapping("/charge")
-    public String charge(String plateNumber, BigDecimal amount){
+    public String charge(String plateNumber, BigDecimal amount) {
         return null;
     }
 }

@@ -1,5 +1,6 @@
 package org.group3.parking.service.impl;
 
+import lombok.Data;
 import org.group3.parking.model.VipInfo;
 import org.group3.parking.repository.VipInfoRepository;
 import org.group3.parking.service.VipInfoService;
@@ -22,8 +23,12 @@ public class VipInfoServiceImpl implements VipInfoService {
     }
 
     @Override
-    public VipInfo getVipInfoByPlateNumber(String plateNumber) throws Exception {
-        return this.vipInfoRepository.getOne(plateNumber);
+    public VipInfo getVipInfoByPlateNumber(String plateNumber) throws CanNotFoundVipException {
+        Optional<VipInfo> vipInfoOptional = vipInfoRepository.findById(plateNumber);
+        if (vipInfoOptional.isEmpty()) {
+            throw new CanNotFoundVipException("This user is not a vip!");
+        }else
+            return vipInfoOptional.get();
     }
 
     @Override
@@ -47,7 +52,16 @@ public class VipInfoServiceImpl implements VipInfoService {
     }
 
     @Override
+    public void insertVipInfo(VipInfo vipInfo) {
+        vipInfoRepository.save(vipInfo);
+    }
+
+
+    @Override
     public void chargeBalance(String plateNumber, BigDecimal amount) throws Exception {
 
     }
+
+
+
 }
