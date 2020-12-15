@@ -21,7 +21,7 @@
 <div th:replace="~{common/commons::topbar}"></div>
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="~{common/commons::sidebar}"></div>
+        <div id="sidebar" th:replace="~{common/commons::sidebar}"></div>
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="form-group">
                 <form th:action="@{/statistics/income}" method="post">
@@ -42,12 +42,12 @@
                             <div class="form-inline">
                                 <label for="startTimeInput">起始时间:</label>
                                 <input class="form-control form-control-sm" id="startTimeInput" type="date"
-                                       name="startTime" placeholder="起始时间">
+                                       name="startTime" placeholder="起始时间" required>
                             </div>
                             <div class="form-inline">
                                 <label for="endTimeInput">终止时间:</label>
                                 <input class="form-control form-control-sm" id="endTimeInput" type="date"
-                                       name="endTime" placeholder="终止时间">
+                                       name="endTime" placeholder="终止时间" required>
                             </div>
                         </div>
                         <div class="col-1">
@@ -56,7 +56,9 @@
                     </div>
                 </form>
             </div>
-            <div id="chart" style="width:100%;height:500px"></div>
+            <div class="w-100">
+                <div id="chart" style="width:100%;height:800px"></div>
+            </div>
 
         </main>
     </div>
@@ -95,12 +97,8 @@
 <!-- Graphs -->
 <script type="text/javascript" th:inline="javascript">
     // 基于准备好的dom，初始化echarts实例
+    // document.getElementById('chart').style.height = document.getElementById('sidebar').offsetHeight.toString() + 'px';
     var myChart = echarts.init(document.getElementById('chart'));
-    var myChartContainer = function () {
-        myChart.style.width = window.innerWidth + 'px';
-        myChart.style.Height = window.innerHeight + 'px';
-    }
-    myChartContainer()
 
     /*<![CDATA[*/
     var income = /*[[${incomeList}]]*/ [];
@@ -129,6 +127,10 @@
 
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
+    window.addEventListener("resize", function () {
+        document.getElementById('chart').resize();
+
+    });
 </script>
 
 </body>

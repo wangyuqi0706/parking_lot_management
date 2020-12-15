@@ -38,7 +38,6 @@ public class StatisticsController {
         List<BigDecimal> result;
         List<String> xSeries;
         if (type.equals("month")) {
-
             var startYearMonth = YearMonth.parse(startTimeString, YearMonthFormatter);
             var endYearMonth = YearMonth.parse(endTimeString, YearMonthFormatter);
             result = parkingInfoService.getIncomeByMonth(startYearMonth, endYearMonth);
