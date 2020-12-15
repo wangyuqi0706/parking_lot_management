@@ -3,6 +3,7 @@ package org.group3.parking.controller;
 import org.group3.parking.model.ParkingInfo;
 import org.group3.parking.service.ConfigService;
 import org.group3.parking.service.ParkingInfoService;
+import org.group3.parking.service.VipInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ public class UserController {
     ParkingInfoService parkingInfoService;
     @Autowired
     ConfigService configService;
+    @Autowired
+    VipInfoService vipInfoService;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
@@ -42,11 +45,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "leave", method = RequestMethod.POST)
-    public ParkingInfo leave(@RequestParam("plateNumber") String plateNumber,
-                             @RequestParam("leaveTime") String leaveTime) {
+    public ResponseEntity<ParkingInfo> leave(@RequestParam("plateNumber") String plateNumber,
+                                             @RequestParam("leaveTime") String leaveTime) {
 
         try {
-            return parkingInfoService.leaveParkingLot(plateNumber, LocalDateTime.parse(leaveTime, formatter));
+            ParkingInfo parkingInfo = parkingInfoService.leaveParkingLot(plateNumber, LocalDateTime.parse(leaveTime, formatter));
+            parkingInfo.setVip(vipInfoService.isVip(plateNumber));
+            return new ResponseEntity<>(parkingInfo, HttpStatus.OK);
         } catch (Exception e) {
             String message = e.getMessage();
             System.out.println(message);

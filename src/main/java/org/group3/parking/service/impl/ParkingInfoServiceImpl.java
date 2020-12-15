@@ -181,7 +181,7 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
     public BigDecimal calculateAmount(ParkingInfo parkingInfo) throws Exception {
         //计算金额
         if (parkingInfo == null || parkingInfo.getEnterTime() == null || parkingInfo.getLeaveTime() == null)
-            throw new Exception();
+            throw new Exception("无效的参数：空指针");
         //进入、离开时间
         LocalDateTime enterTime = parkingInfo.getEnterTime();
         LocalDateTime leaveTime = parkingInfo.getLeaveTime();
