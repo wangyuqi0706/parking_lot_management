@@ -180,7 +180,7 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
     @Override
     public BigDecimal calculateAmount(ParkingInfo parkingInfo) throws Exception {
         //计算金额
-        if(parkingInfo ==null || parkingInfo.getEnterTime() == null || parkingInfo.getLeaveTime() == null)
+        if (parkingInfo == null || parkingInfo.getEnterTime() == null || parkingInfo.getLeaveTime() == null)
             throw new Exception();
         //进入、离开时间
         LocalDateTime enterTime = parkingInfo.getEnterTime();
@@ -208,7 +208,7 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
         amount = amount.add(days.multiply(dayTimePrice.add(nightTimePrice)));
 
         //计算不足一天部分的金额
-        for (var i = enterTime.getHour(); i < enterTime.getHour() + duration.toHoursPart(); i++) {
+        for (var i = enterTime.getHour(); i < enterTime.getHour() + hours.intValue(); i++) {
             if ((i >= 9 && i <= 21) || (i >= 9 + 24 && i <= 21 + 24)) {
                 amount = amount.add(dayTimePrice);
             } else {
@@ -224,6 +224,7 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
 
     /**
      * 获取当前停车场内车辆
+     *
      * @return 当前停车场内车辆数
      */
     @Override
