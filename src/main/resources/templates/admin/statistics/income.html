@@ -56,7 +56,7 @@
                     </div>
                 </form>
             </div>
-            <div id="chart" style="width: 1600px;height:800px;"></div>
+            <div id="chart" style="width:100%;height:500px"></div>
 
         </main>
     </div>
@@ -96,6 +96,11 @@
 <script type="text/javascript" th:inline="javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('chart'));
+    var myChartContainer = function () {
+        myChart.style.width = window.innerWidth + 'px';
+        myChart.style.Height = window.innerHeight + 'px';
+    }
+    myChartContainer()
 
     /*<![CDATA[*/
     var income = /*[[${incomeList}]]*/ [];
