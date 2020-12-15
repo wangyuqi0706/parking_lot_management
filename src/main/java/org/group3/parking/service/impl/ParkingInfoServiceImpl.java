@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -205,20 +206,25 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
             hours = hours.add(BigDecimal.ONE);
 
         //计算整天部分的金额
-        amount = amount.add(days.multiply(dayTimePrice.add(nightTimePrice)));
+        amount = amount.add(days.multiply(dayTimePrice.add(nightTimePrice).multiply(BigDecimal.valueOf(12))));
 
         //计算不足一天部分的金额
+        int day = 0;
+        int night = 0;
         for (var i = enterTime.getHour(); i < enterTime.getHour() + hours.intValue(); i++) {
-            if ((i >= 9 && i <= 21) || (i >= 9 + 24 && i <= 21 + 24)) {
+            if ((i >= 9 && i < 21) || (i >= 9 + 24 && i < 21 + 24)) {
                 amount = amount.add(dayTimePrice);
+                day++;
             } else {
                 amount = amount.add(nightTimePrice);
+                night++;
             }
         }
 
         if (vipInfoService.isVip(parkingInfo.getPlateNumber())) {
             amount = amount.multiply(configService.getParkingLotConfig().getDiscount());
         }
+        amount = amount.setScale(2, RoundingMode.HALF_UP);
         return amount;
     }
 
