@@ -29,7 +29,9 @@ public class ParkingInfo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm", timezone = "GMT+8")
+    @Column(nullable = true)
     private LocalDateTime leaveTime;
+
 
     private BigDecimal amountPayable;
 

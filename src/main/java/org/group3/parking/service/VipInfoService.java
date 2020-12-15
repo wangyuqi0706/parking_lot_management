@@ -18,6 +18,7 @@ public interface VipInfoService {
 
     void insertVipInfo(VipInfo vipInfo);
 
+    void deleteVipInfo(String plateNumber);
 
     void chargeBalance(String plateNumber, BigDecimal amount) throws Exception;
 

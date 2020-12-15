@@ -17,7 +17,7 @@ public class ParkingLotConfig {
     BigDecimal dayTimeUnitPrice;
     BigDecimal nightTimeUnitPrice;
     BigDecimal basePrice;
-
+    private String parkingLotType;
     BigDecimal discount;
 
 }

@@ -30,6 +30,7 @@ public class PayController {
                 //余额充足
                 balance = balance.subtract(parkingInfo.getAmountPayable());
                 vipInfo.setBalance(balance);
+                vipInfoService.updateVipInfoByPlateNumber(vipInfo.getPlateNumber(), vipInfo);
                 msg.addAttribute("vipInfo", vipInfo);
                 return "pay/success";
             } else {

@@ -13,36 +13,10 @@
 
     <!-- Custom styles for this template -->
     <link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
-    <style type="text/css">
-        /* Chart.js */
-
-        @-webkit-keyframes chartjs-render-animation {
-            from {
-                opacity: 0.99
-            }
-            to {
-                opacity: 1
-            }
-        }
-
-        @keyframes chartjs-render-animation {
-            from {
-                opacity: 0.99
-            }
-            to {
-                opacity: 1
-            }
-        }
-
-        .chartjs-render-monitor {
-            -webkit-animation: chartjs-render-animation 0.001s;
-            animation: chartjs-render-animation 0.001s;
-        }
-    </style>
 </head>
 
 <body>
-<div th:replace="~{/common/commons::topbar}"></div>
+<div th:replace="~{common/commons::topbar}"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="~{common/commons::sidebar}"></div>
@@ -58,13 +32,13 @@
 
                 <div class="form-group">
                     <label for="amountPayableInput">账户余额</label>
-                    <input type="text" class="form-control" id="amountPayableInput" th:name="balance"
+                    <input type="number" step="0.01" min="0" class="form-control" id="amountPayableInput" th:name="balance"
                            placeholder="账户余额">
                 </div>
 
                 <div class="form-group">
                     <label for="amountPayableInput">联系电话</label>
-                    <input type="text" class="form-control" id="phoneNumberInput" th:name="phoneNumber"
+                    <input type="tel" class="form-control" id="phoneNumberInput" th:name="phoneNumber"
                            placeholder="联系电话">
                 </div>
 

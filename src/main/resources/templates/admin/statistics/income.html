@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!--echarts-->
-    <script th:src="@{/asserts/js/echarts.js}"></script>
+    <script th:src="@{/asserts/js/echarts.common.min.js}"></script>
 
     <title>首页</title>
     <!-- Bootstrap core CSS -->
@@ -18,7 +18,7 @@
 </head>
 
 <body>
-<div th:replace="~{/common/commons::topbar}"></div>
+<div th:replace="~{common/commons::topbar}"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="~{common/commons::sidebar}"></div>
@@ -29,7 +29,7 @@
                         <div class="form-inline col-**" id="radios">
                             <div class="form-inline">
                                 <input class="form-control" id="r1" type="radio" name="type" value="day"
-                                       onclick="onRadioChange(this.value)"/>
+                                       onclick="onRadioChange(this.value)" checked/>
                                 <label for="r1">按日查询</label>
                             </div>
                             <div class="form-inline">
@@ -61,21 +61,7 @@
         </main>
     </div>
 
-    <script>
-        function onRadioChange(value) {
-            var startTimeInput = document.getElementById("startTimeInput");
-            var endTimeInput = document.getElementById("endTimeInput");
-            var type = document.getElementById("type");
-            value = type.value;
-            if (value === "day") {
-                startTimeInput.type = "date";
-                endTimeInput.type = "date";
-            } else if (value === "month") {
-                startTimeInput.type = "month";
-                endTimeInput.type = "month";
-            }
-        }
-    </script>
+
 </div>
 
 <!-- Bootstrap core JavaScript
@@ -89,6 +75,21 @@
 <script type="text/javascript" th:src="@{/asserts/js/feather.min.js}"></script>
 <script>
     feather.replace()
+</script>
+
+<!--onRadioChange-->
+<script>
+    function onRadioChange(value) {
+        var startTimeInput = document.getElementById("startTimeInput");
+        var endTimeInput = document.getElementById("endTimeInput");
+        if (value === "day") {
+            startTimeInput.type = "date";
+            endTimeInput.type = "date";
+        } else if (value === "month") {
+            startTimeInput.type = "month";
+            endTimeInput.type = "month";
+        }
+    }
 </script>
 
 <!-- Graphs -->
@@ -116,7 +117,8 @@
         series: [{
             name: '收益',
             type: 'line',
-            data: income
+            data: income,
+            smooth: true
         }]
     };
 

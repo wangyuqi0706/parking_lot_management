@@ -9,7 +9,10 @@ import org.group3.parking.service.VipInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,7 +34,11 @@ public class AdminController {
     }
 
     @RequestMapping("main")
-    public String toMainPage() {
+    public String toMainPage(Model msg) {
+        Integer currentNumber = parkingInfoService.getCurrentNumber();
+        Integer size = configService.getParkingLotConfig().getSize();
+        msg.addAttribute("currentNumber", currentNumber);
+        msg.addAttribute("size", size);
         return "admin/main";
     }
 
@@ -56,6 +63,12 @@ public class AdminController {
     @PostMapping("parking/add")
     public String addParkingInfo(ParkingInfo parkingInfo) {
         try {
+            if (parkingInfo.getLeaveTime() != null) {
+                BigDecimal amount = parkingInfoService.calculateAmount(parkingInfo);
+                parkingInfo.setAmountPayable(amount);
+            }
+            else
+                parkingInfo.setAmountPayable(BigDecimal.ZERO);
             this.parkingInfoService.insertParkingInfo(parkingInfo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,6 +91,10 @@ public class AdminController {
     @PostMapping("parking/edit/{parkingId}")
     public String editParingInfo(@PathVariable Long parkingId, ParkingInfo parkingInfo) {
         try {
+            if (parkingInfo.getLeaveTime() != null)
+                parkingInfo.setAmountPayable(parkingInfoService.calculateAmount(parkingInfo));
+            else
+                parkingInfo.setAmountPayable(BigDecimal.ZERO);
             this.parkingInfoService.updateParkingInfo(parkingId, parkingInfo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,6 +162,17 @@ public class AdminController {
         return "redirect:/admin/vip/info";
     }
 
+    @GetMapping("vip/delete/{plateNumber}")
+    public String deleteVipInfo(@PathVariable String plateNumber) {
+        try {
+            vipInfoService.deleteVipInfo(plateNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "404";
+        }
+        return "redirect:/admin/vip/info";
+    }
+
     @GetMapping("config")
     public String toConfigPage(Model msg) {
 
@@ -165,10 +193,10 @@ public class AdminController {
     }
 
     @GetMapping("config/success")
-    public String toConfigSuccessPage(Model msg){
+    public String toConfigSuccessPage(Model msg) {
         ParkingLotConfig parkingLotConfig = configService.getParkingLotConfig();
         msg.addAttribute("currentConfig", parkingLotConfig);
-        msg.addAttribute("success",true);
+        msg.addAttribute("success", true);
         return "admin/config";
     }
 

@@ -29,8 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/admin/login")
                 .failureForwardUrl("/admin/login/error")
                 .successForwardUrl("/admin/main").permitAll().and()
-                .authorizeRequests().antMatchers("/admin/index", "/asserts/**","/**").permitAll()
-                .anyRequest().authenticated()
+                .authorizeRequests().antMatchers("/admin/index", "/asserts/**").permitAll()
+                .antMatchers("/admin/**").authenticated()
                 .and().csrf().disable();
 //        http.authorizeRequests().antMatchers("/**").permitAll();
     }

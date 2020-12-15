@@ -27,7 +27,7 @@ public class StatisticsController {
 
     @GetMapping("income")
     public String toIncomingStatistics() {
-        return "/admin/statistics/income";
+        return "admin/statistics/income";
     }
 
     @PostMapping("income")
@@ -96,7 +96,7 @@ public class StatisticsController {
     private List<String> getDateList(LocalDate start, LocalDate end) {
         List<String> xSeries = new ArrayList<>();
         for (var i = start; !i.isAfter(end); i = i.plusDays(1)) {
-            xSeries.add(i.format(YearMonthFormatter));
+            xSeries.add(i.format(dateFormatter));
         }
         return xSeries;
     }

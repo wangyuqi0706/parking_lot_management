@@ -23,8 +23,6 @@ public interface ParkingInfoService {
 
     ParkingInfo leaveParkingLot(String plateNumber,LocalDateTime enterTime) throws Exception;
 
-    void payForLeave(String plateNumber, BigDecimal amount) throws Exception;
-
     List<BigDecimal> getIncomeByMonth(YearMonth startYearMonth, YearMonth endYearMonth);
 
     List<BigDecimal> getIncomeByDay(LocalDate startDate, LocalDate endDate);
@@ -32,6 +30,10 @@ public interface ParkingInfoService {
     List<Integer> getParkingNumberByMonth(YearMonth startYearMonth, YearMonth endYearMonth);
 
     List<Integer> getParkingNumberByDay(LocalDate startDate, LocalDate endDate);
+
+    BigDecimal calculateAmount(ParkingInfo parkingInfo) throws Exception;
+
+    Integer getCurrentNumber();
 
     class HasEnteredException extends Exception{
         public HasEnteredException(String message){

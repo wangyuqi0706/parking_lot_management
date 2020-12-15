@@ -42,13 +42,13 @@
 </head>
 
 <body>
-<div th:replace="~{/common/commons::topbar}"></div>
+<div th:replace="~{common/commons::topbar}"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="~{common/commons::sidebar}"></div>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <h2>修改停车场信息</h2>
-            <form th:action="@{/admin/config}" method="post">
+            <form th:action="@{config}" method="post">
                 <div class="form-group">
                     <label for="sizeInput">规模</label>
                     <input type="number" step="1" min="0" class="form-control" id="sizeInput" name="size"
@@ -78,6 +78,12 @@
                            placeholder="VIP折扣" th:value="${currentConfig.getDiscount()}">
                 </div>
                 <div class="form-group">
+                    <label for="typeInput">停车场类型</label>
+                    <input type="text" class="form-control" id="typeInput"
+                           name="parkingLotType"
+                           th:value="${currentConfig.getParkingLotType()}">
+                </div>
+                <div class="form-group">
                     <button type="submit" class="btn btn-primary">修改</button>
                     <div class="alert alert-success" role="alert" th:if="${success}">修改成功</div>
                 </div>
@@ -101,36 +107,7 @@
 </script>
 
 <!-- Graphs -->
-<script type="text/javascript" th:src="@{/asserts/js/Chart.min.js}"></script>
-<script>
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            datasets: [{
-                data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-                lineTension: 0,
-                backgroundColor: 'transparent',
-                borderColor: '#007bff',
-                borderWidth: 4,
-                pointBackgroundColor: '#007bff'
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: false
-                    }
-                }]
-            },
-            legend: {
-                display: false,
-            }
-        }
-    });
-</script>
+
 
 </body>
 

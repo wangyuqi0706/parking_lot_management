@@ -13,36 +13,10 @@
 
     <!-- Custom styles for this template -->
     <link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
-    <style type="text/css">
-        /* Chart.js */
-
-        @-webkit-keyframes chartjs-render-animation {
-            from {
-                opacity: 0.99
-            }
-            to {
-                opacity: 1
-            }
-        }
-
-        @keyframes chartjs-render-animation {
-            from {
-                opacity: 0.99
-            }
-            to {
-                opacity: 1
-            }
-        }
-
-        .chartjs-render-monitor {
-            -webkit-animation: chartjs-render-animation 0.001s;
-            animation: chartjs-render-animation 0.001s;
-        }
-    </style>
 </head>
 
 <body>
-<div th:replace="~{/common/commons::topbar}"></div>
+<div th:replace="~{common/commons::topbar}"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="~{common/commons::sidebar}"></div>
