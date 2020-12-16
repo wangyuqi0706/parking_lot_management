@@ -31,18 +31,18 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
     }
 
     @Override
-    public void updateParkingInfo(Long id, ParkingInfo parkingInfo) throws Exception {
+    public void updateParkingInfo(Long id, ParkingInfo parkingInfo) {
         parkingInfo.setParkingId(id);
         this.parkingInfoRepository.saveAndFlush(parkingInfo);
     }
 
     @Override
-    public void deleteParkingInfo(Long id) throws Exception {
+    public void deleteParkingInfo(Long id) {
         this.parkingInfoRepository.deleteById(id);
     }
 
     @Override
-    public void insertParkingInfo(ParkingInfo parkingInfo) throws Exception {
+    public void insertParkingInfo(ParkingInfo parkingInfo) {
         parkingInfoRepository.saveAndFlush(parkingInfo);
     }
 
@@ -209,15 +209,11 @@ public class ParkingInfoServiceImpl implements ParkingInfoService {
         amount = amount.add(days.multiply(dayTimePrice.add(nightTimePrice).multiply(BigDecimal.valueOf(12))));
 
         //计算不足一天部分的金额
-        int day = 0;
-        int night = 0;
         for (var i = enterTime.getHour(); i < enterTime.getHour() + hours.intValue(); i++) {
             if ((i >= 9 && i < 21) || (i >= 9 + 24 && i < 21 + 24)) {
                 amount = amount.add(dayTimePrice);
-                day++;
             } else {
                 amount = amount.add(nightTimePrice);
-                night++;
             }
         }
 
